@@ -1,17 +1,57 @@
 version: "3.8"
 
 services:
-  postgres:
-    image: postgres:11.2
-    ports:
-      - "5432:5432"
+#   postgres:
+#     image: postgres:11.2
+#     ports:
+#       - "5432:5432"
+#     environment:
+#       POSTGRES_USER: root
+#       POSTGRES_PASSWORD: 123456
+#       POSTGRES_DB: postgres
+#       PGDATA: /var/lib/postgresql/data/pgdata
+#     volumes:
+#       - /:/var/lib/postgresql/data
+      
+  mysql:
+    image: mysql:5.7.22
+    container_name: mysql
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: postgres
-      PGDATA: /var/lib/postgresql/data/pgdata
+      MYSQL_ROOT_PASSWORD: root
     volumes:
-      - /:/var/lib/postgresql/data
+      - ./.docker/mysql/dbdata:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - 9000:80
+    environment:
+      - PMA_ARBITRARY=1
+
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongodbdata:/data/db
+    ports:
+      - 27017:27017
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express
+    restart: always
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+    ports:
+      - 8081:8081
+    links:
+      - mongo
 
 volumes:
-  postgres: null
+#   postgres: null
+  mongodbdata: null

@@ -16,9 +16,12 @@ services:
   mysql:
     image: mysql:5.7.22
     container_name: mysql
-    restart: unless-stopped
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: api_epione
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
     volumes:
       - ./.docker/mysql/dbdata:/var/lib/mysql
     ports:
